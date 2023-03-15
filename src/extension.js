@@ -1,4 +1,5 @@
 "use strict";
+import { showPopup } from "./popup";
 
 // loader-code: wait until gmailjs has finished loading, before triggering actual extensiode-code.
 const loaderId = setInterval(() => {
@@ -47,7 +48,7 @@ function startExtension(gmail) {
       setTimeout(() => {
         compose.body("this is a automated email");
       }, 100);
-      gmail.tools.add_compose_button(compose, "test", () => console.log("hi"));
+      gmail.tools.add_compose_button(compose, "test", () => showPopup());
     });
   });
 }
