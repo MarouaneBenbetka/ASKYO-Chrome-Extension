@@ -4,7 +4,7 @@ export function showPopup() {
   var popup = document.createElement("div");
   // set the popup's HTML content to the fetched data
   popup.innerHTML = data;
-  popup.setAttribute("id", "popup");
+  popup.setAttribute("id", "popup-cont");
   // add some styles to make the popup look nice
   popup.style.position = "fixed";
   popup.style.top = "50%";
@@ -28,7 +28,7 @@ function initFunctions() {
 
 function closePopup() {
   // remove the popup element from the page
-  var popup = document.getElementById("popup");
+  var popup = document.getElementById("popup-cont");
   popup.parentNode.removeChild(popup);
 }
 

@@ -36,6 +36,29 @@ function getResponse(email, option, helperText) {
   );
 }
 
+function getSmartReplies(email) {
+  const fetchOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email: email }),
+  };
+
+  fetch(
+    "https://askyo-api.onrender.com/api/get-smart-replies",
+    fetchOptions
+  ).then((response) => {
+    if (response.status != 200) {
+      console.error("an error has occured, try later");
+    } else {
+      response.json().then((data) => {
+        document.getElementById("reply-area").innerText = data;
+      });
+    }
+  });
+}
+
 function submitResponse(compose, closePopup) {
   const response = document.getElementById("reply-area").innerText;
   compose.body(response);
