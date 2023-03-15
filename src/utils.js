@@ -1,5 +1,5 @@
 //get email
-function getCurrentEmail() {
+export function getCurrentEmail() {
   const id = window.gmail.new.get.email_id();
   const email = window.gmail.new.get.email_data(id);
   return { subject: email.subject, content: email.content_html };
@@ -7,13 +7,12 @@ function getCurrentEmail() {
 
 //gen resp(option)
 
-function getResponse(email, option, helperText) {
+function getResponse(email, text) {
   const reqMsg = `i received this email:
 	email subject: ${email.subject}
 	email content: "${email.content}"
-	i want you to generate a response to that email
-	${helperText?.length ? `- ${helperText}` : ""}
-	${option?.length ? `- i want the response to be in a ${option} tone` : ""}`;
+	can you write the response using this smart replie: ${text}, as a general theme, 
+  put the response email between < >`;
 
   const fetchOptions = {
     method: "POST",
@@ -29,20 +28,27 @@ function getResponse(email, option, helperText) {
         console.error("an error has occured, try later");
       } else {
         response.json().then((data) => {
-          document.getElementById("reply-area").innerText = data;
+          const regex = /<([^>]+)>/g;
+          const matches = data.message.match(regex);
+          if (matches) {
+            const textBetweenBrackets = matches[0].slice(1, -1);
+            document.getElementById("popup-textarea").innerText =
+              textBetweenBrackets;
+          }
         });
       }
     }
   );
 }
 
-function getSmartReplies(email) {
+export function getSmartReplies(email) {
+  console.log("slected mail:", email);
   const fetchOptions = {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email: email }),
+    body: JSON.stringify({ email: email.content }),
   };
 
   fetch(
@@ -53,14 +59,18 @@ function getSmartReplies(email) {
       console.error("an error has occured, try later");
     } else {
       response.json().then((data) => {
-        document.getElementById("reply-area").innerText = data;
+        data.forEach((element, ind) => {
+          const btn = document.getElementById("btn-" + (ind + 1));
+          btn.innerText = element;
+          btn.addEventListener("click", (e) => getResponse(email, element));
+        });
       });
     }
   });
 }
 
-function submitResponse(compose, closePopup) {
-  const response = document.getElementById("reply-area").innerText;
+export function submitResponse(compose, closePopup) {
+  const response = document.getElementById("popup-textarea").value;
   compose.body(response);
   closePopup();
 }
