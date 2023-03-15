@@ -31,3 +31,7 @@ function closePopup() {
   var popup = document.getElementById("popup");
   popup.parentNode.removeChild(popup);
 }
+
+/*
+text area: reply-area
+*/
