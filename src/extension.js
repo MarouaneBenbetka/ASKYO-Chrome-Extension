@@ -44,10 +44,8 @@ function startExtension(gmail) {
     });
 
     gmail.observe.on("compose", (compose) => {
-      setTimeout(() => {
-        compose.body("this is a automated email");
-      }, 100);
-      gmail.tools.add_compose_button(compose, "test", () => console.log("hi"));
+      
+      gmail.tools.add_compose_button(compose, "test", () => compose.body("this is a automated email"));
     });
   });
 }
