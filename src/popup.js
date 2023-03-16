@@ -31,6 +31,40 @@ function initFunctions(compose) {
   document.getElementById("popup-reply").addEventListener("click", () => {
     submitResponse(compose, closePopup);
   });
+
+  /** */
+
+  const textarea = document.getElementById("popup-textarea");
+
+  textarea.addEventListener("input", () => {
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
+  });
+
+  const replyPlaceholder = document.getElementById("popup-textarea");
+  const ellipsis = " ...";
+
+  let index = 0;
+  const timeoutID = setInterval(() => {
+    if (index < ellipsis.length) {
+      replyPlaceholder.placeholder = `Reply${ellipsis.slice(0, index + 1)}`;
+      index++;
+    } else {
+      index = 0;
+    }
+    if (replyPlaceholder.value.length !== 0) {
+      clearTimeout(timeoutID);
+    }
+  }, 300);
+
+  const Other =
+    document.getElementsByClassName("popup-buttons")[0].lastElementChild;
+  const OtherTextInput = document.getElementsByClassName(
+    "popup-input-container"
+  )[0];
+  Other.addEventListener("click", () => {
+    OtherTextInput.style.display = "flex";
+  });
 }
 
 function closePopup() {

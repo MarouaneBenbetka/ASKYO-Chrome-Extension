@@ -12,7 +12,7 @@ function getResponse(email, text) {
 	email subject: ${email.subject}
 	email content: "${email.content}"
 	can you write the response using this smart replie: ${text}, as a general theme, 
-  put the response email between < >`;
+  the response should be in text form and never html`;
 
   const fetchOptions = {
     method: "POST",
@@ -28,13 +28,15 @@ function getResponse(email, text) {
         console.error("an error has occured, try later");
       } else {
         response.json().then((data) => {
+          /*
           const regex = /<([^>]+)>/g;
+          console.log(data.message);
           const matches = data.message.match(regex);
           if (matches) {
             const textBetweenBrackets = matches[0].slice(1, -1);
-            document.getElementById("popup-textarea").innerText =
-              textBetweenBrackets;
           }
+          */
+          document.getElementById("popup-textarea").innerText = data.message;
         });
       }
     }
@@ -64,6 +66,10 @@ export function getSmartReplies(email) {
           btn.innerText = element;
           btn.addEventListener("click", (e) => getResponse(email, element));
         });
+      });
+      document.getElementById("popup-submit").addEventListener("click", (e) => {
+        const otherText = document.getElementById("popup-input").value;
+        getResponse(email, otherText);
       });
     }
   });

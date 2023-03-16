@@ -37,8 +37,6 @@ function startExtension(gmail) {
   window.gmail = gmail;
 
   gmail.observe.on("load", () => {
-    addBtn(gmail);
-
     gmail.observe.on("view_email", (domEmail) => {
       console.log("Looking at email:", domEmail);
       const emailData = gmail.new.get.email_data(domEmail);
@@ -47,8 +45,17 @@ function startExtension(gmail) {
 
     gmail.observe.on("compose", (compose) => {
       const email = getCurrentEmail();
-      gmail.tools.add_compose_button(compose, "test", () =>
-        showPopup(email, compose)
+      //
+      var style = document.createElement("style");
+      style.setAttribute("type", "text/css");
+      style.innerHTML = ".askyo-btn{background-color: #f33769; color: white}";
+      document.head.appendChild(style);
+      //
+      gmail.tools.add_compose_button(
+        compose,
+        "askyo",
+        () => showPopup(email, compose),
+        "askyo-btn"
       );
     });
   });
