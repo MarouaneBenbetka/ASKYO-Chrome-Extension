@@ -1,5 +1,6 @@
 "use strict";
 import { showPopup } from "./popup";
+import { getCurrentEmail } from "./utils";
 
 // loader-code: wait until gmailjs has finished loading, before triggering actual extensiode-code.
 const loaderId = setInterval(() => {
@@ -36,8 +37,6 @@ function startExtension(gmail) {
   window.gmail = gmail;
 
   gmail.observe.on("load", () => {
-    addBtn(gmail);
-
     gmail.observe.on("view_email", (domEmail) => {
       console.log("Looking at email:", domEmail);
       const emailData = gmail.new.get.email_data(domEmail);
@@ -45,10 +44,19 @@ function startExtension(gmail) {
     });
 
     gmail.observe.on("compose", (compose) => {
-      setTimeout(() => {
-        compose.body("this is a automated email");
-      }, 100);
-      gmail.tools.add_compose_button(compose, "test", () => showPopup());
+      const email = getCurrentEmail();
+      //
+      var style = document.createElement("style");
+      style.setAttribute("type", "text/css");
+      style.innerHTML = ".askyo-btn{background-color: #f33769; color: white}";
+      document.head.appendChild(style);
+      //
+      gmail.tools.add_compose_button(
+        compose,
+        "askyo",
+        () => showPopup(email, compose),
+        "askyo-btn"
+      );
     });
   });
 }
